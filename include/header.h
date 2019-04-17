@@ -1,5 +1,5 @@
-#ifndef TO_H
-# define TO_H
+#ifndef CW_H
+# define CW_H
 
 # include <stdio.h>
 #include <time.h>
@@ -24,9 +24,10 @@ typedef struct      dict
 typedef struct      intersection
 {
     int             Vpos;
-    char            *Vword;
+    char            **Vword;
     int             Hpos;
-    char            *Hword;
+    char            **Hword;
+    int             id;
 }                   intersection;
 
 typedef struct      sgrid
@@ -40,16 +41,17 @@ typedef struct      wdinput
 {
     char            *word;
     int             len;
-    intersection**  intrs;
+    intersection    **intrs;
     int             nrOfI;
 }                   winput;
 
-intersection** setIntersectionsOnGrig(sgrid *grid);
+intersection** setIntersectionsOnGrig(sgrid *grid, int *len);
 winput  **horizontalWordsInputs(sgrid *grid, intersection** intrs, int* len);
 winput  **verticalWordsInputs(sgrid *grid, intersection** intrs,  int* len);
-void readFile(dict  *words, sgrid *grid);
+void readFile(dict  *words, sgrid *grid, char* fl);
 void printGrid(sgrid *grid);
 void printInputsArray(winput **in_array, int len);
 void printWordsDict(dict* wdict);
+void printIntersections(intersection **intrs, int len);
 
 #endif
