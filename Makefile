@@ -12,8 +12,8 @@ YELLOW = \033[1;33m
 
 SRCS =	crossWord.c \
 		src/read.c \
-		src/grid.c 
-		# src/solver.c
+		src/grid.c \
+		src/solver.c
 
 
 OBJS = $(SRCS:.c=.o)

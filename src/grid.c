@@ -20,19 +20,20 @@ intersection** setIntersectionsOnGrig(sgrid *grid, int *len){
     *len = icount;
     icount = 0;
 
+    int char_pos;
     // Set intersections position for coross words
     for (int i = 0; i < grid->y; i++)
         for (int j = 0; j < grid->x; j++)
             if (grid->grid[i][j] > 0){
                 (intrs[icount])->id = grid->grid[i][j];
-                int char_pos = 0;
-                while (i - char_pos >= 0 && -1 < grid->grid[i - char_pos][j])
-                    char_pos++;
-                (intrs[icount])->Hpos = char_pos;
                 char_pos = 0;
-                while (j - char_pos >= 0 && -1 < grid->grid[i][j - char_pos])
+                while (i - char_pos > 0 && -1 < grid->grid[i - char_pos - 1][j])
                     char_pos++;
                 (intrs[icount])->Vpos = char_pos;
+                char_pos = 0;
+                while (j - char_pos > 0 && -1 < grid->grid[i][j - char_pos - 1])
+                    char_pos++;
+                (intrs[icount])->Hpos = char_pos;
                 icount++;
             }
     return intrs;
@@ -68,7 +69,7 @@ winput  **horizontalWordsInputs(sgrid *grid, intersection** intrs, int* len){
                 ic = 0;
                 while (j < grid->x && -1 < grid->grid[i][j]){
                     if (grid->grid[i][j] > 0){
-                        (Vinputs[counter])->intrs[ic] = (intrs[grid->grid[i][j]-1]);
+                        (Vinputs[counter])->intrs[ic] = (intrs[grid->grid[i][j] - 1]);
                         ic++;
                         (intrs[grid->grid[i][j]-1])->Hword = (char**)malloc(sizeof(char*));
                         (intrs[grid->grid[i][j]-1])->Hword = &((Vinputs[counter])->word);
@@ -143,8 +144,11 @@ void printGrid(sgrid *grid){
         for (int j = 0; j < grid->x; j++){
             if (grid->grid[i][j] > -1 && grid->grid[i][j] < 10)
                 printf(" %d", grid->grid[i][j]);
-            else
+            else if (grid->grid[i][j] > 9)
                 printf("%d", grid->grid[i][j]);
+            else
+                printf("  ");
+            
         }
         printf("\n");
     }
@@ -175,6 +179,52 @@ void printWordsDict(dict* wdict){
 
 void printIntersections(intersection **intrs, int len){
     for(int i = 0; i < len; i++) {
-        printf("[%d] H %s, V %s\n", intrs[i]->id, *intrs[i]->Hword, *intrs[i]->Vword);
+        printf("[%d] H %d %s, V %d %s\n", intrs[i]->id, intrs[i]->Hpos, *intrs[i]->Hword, intrs[i]->Vpos, *intrs[i]->Vword);
+    }
+}
+
+void completeGrig(intersection **intrs, sgrid *grid){
+
+    int   x;
+    char  *wd;
+    sgrid *result;
+    result = (sgrid*)malloc(sizeof(sgrid));
+    result->grid = (int**)malloc(sizeof(int*)*grid->y);
+    for(int i = 0; i < grid->y; i++)
+        result->grid[i] = (int*)malloc(sizeof(int)*grid->x);
+
+     for(int i = 0; i < grid->y; i++)
+        for(int j = 0; j < grid->x; j++)   
+            result->grid[i][j] = '+';
+    
+    for(int i = 0; i < grid->y; i++)
+        for(int j = 0; j < grid->x; j++){
+            if (grid->grid[i][j] < 0)
+                result->grid[i][j] = ' ';
+            else if (grid->grid[i][j] > 0){
+                if (*intrs[grid->grid[i][j] - 1]->Hword){
+                    x = j - intrs[grid->grid[i][j] - 1]->Hpos;
+                    wd = *intrs[grid->grid[i][j] - 1]->Hword;
+                    while(*wd && x < grid->x){
+                        result->grid[i][x++] = *wd;
+                        wd++;
+                    }
+                } else
+                    result->grid[i][j] = 'x';
+                if (*intrs[grid->grid[i][j] - 1]->Vword){
+                    printf("%s  vpos = %d\n", *intrs[grid->grid[i][j] - 1]->Vword, intrs[grid->grid[i][j] - 1]->Vpos);
+                    x = i - intrs[grid->grid[i][j] - 1]->Vpos;
+                    wd = *intrs[grid->grid[i][j] - 1]->Vword;
+                    while(*wd && x < grid->y){
+                        result->grid[x++][j] = *wd;
+                        wd++;
+                    }
+                }
+            }
+        }
+    for(int i = 0; i < grid->y; i++){
+        for(int j = 0; j < grid->x; j++)
+            printf("%c", result->grid[i][j]);
+        printf("\n");
     }
 }

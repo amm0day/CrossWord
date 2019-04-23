@@ -18,19 +18,20 @@ int main()
     Hinputs = horizontalWordsInputs(grid, intrs, &Hlen);
     Vinputs = verticalWordsInputs(grid, intrs, &Vlen);
 
-    Vinputs[0]->word = words->words->word;
-    Hinputs[0]->word = words->words->next->word;
 
-// printGrid(grid);
+printGrid(grid);
 
-printf("Vertical:\n");
-    printInputsArray(Vinputs, Vlen);
-printf("Horizontal:\n");
-    printInputsArray(Hinputs, Hlen);
+Solver(Vinputs, Vlen, Hinputs, Hlen, intrs, Ilen, words);
+// printf("Vertical:\n");
+//     printInputsArray(Vinputs, Vlen);
+// printf("Horizontal:\n");
+//     printInputsArray(Hinputs, Hlen);
 
-printIntersections(intrs, Ilen);
+// printIntersections(intrs, Ilen);
 
 // printWordsDict(words);
+
+completeGrig(intrs, grid);
 
     return 0;
 }
