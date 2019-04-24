@@ -57,5 +57,6 @@ void printWordsDict(dict* wdict);
 void printIntersections(intersection **intrs, int len);
 void completeGrig(intersection **intrs, sgrid *grid);
 size_t tryWord(winput *Winput, word *word);
+void backTrack(winput **Vinputs, int Vlen, winput **Hinputs,  int Hlen, dict *words, int H, int V);
 
 #endif

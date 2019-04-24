@@ -21,7 +21,8 @@ int main()
 
 printGrid(grid);
 
-Solver(Vinputs, Vlen, Hinputs, Hlen, intrs, Ilen, words);
+backTrack(Vinputs, Vlen, Hinputs,  Hlen, words, 0, 0);
+// Solver(Vinputs, Vlen, Hinputs, Hlen, intrs, Ilen, words);
 // printf("Vertical:\n");
 //     printInputsArray(Vinputs, Vlen);
 // printf("Horizontal:\n");
@@ -31,7 +32,7 @@ Solver(Vinputs, Vlen, Hinputs, Hlen, intrs, Ilen, words);
 
 // printWordsDict(words);
 
-completeGrig(intrs, grid);
+completeGrig(intrs, grid);    
 
     return 0;
 }
