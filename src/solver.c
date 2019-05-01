@@ -67,54 +67,63 @@ void Solver(winput **Vinputs, int Vlen, winput **Hinputs,  int Hlen, intersectio
 // }
 
 void backTrack(winput **Vinputs, int Vlen, winput **Hinputs,  int Hlen, dict *words, int H, int V){
-	dict *tmpDict = words;
+	dict *tmpDict;
 	word *tmpWord;
 
-	if (V == Vlen && H == Hlen)
-		return;
-	
-	if (V <= H && V < Vlen){
-		while (tmpDict && tmpDict->len != Vinputs[V]->len) 
-			tmpDict = tmpDict->next;
-		if (!tmpDict){
-			printf("Words with len %d doesn't exists\n", Vinputs[V]->len);
+	while (1){
+		tmpDict = words;
+		if (V == Vlen && H == Hlen)
 			return;
-		}
-		tmpWord = tmpDict->words;
-		printf("pointer = %p, len = %d\n", tmpWord, Vinputs[V]->len);
-		while (tmpWord) {
-			if (tryWord(Vinputs[V], tmpWord))
-				return backTrack(Vinputs, Vlen, Hinputs,  Hlen, words, H, ++V);
-			else
-				tmpWord = tmpWord->next;
-		}
-		if (!tmpWord && H != 0)
-			backTrack(Vinputs, Vlen, Hinputs,  Hlen, words, --H, V);			
-		else {
-			printf("Problem has no solution on V\n");
-			return;
-		}
-	} else {
-		while (tmpDict && tmpDict->len != Hinputs[H]->len) 
-			tmpDict = tmpDict->next;
-		if (!tmpDict) {
-			printf("Words with len %d doesn't exists\n", Hinputs[H]->len);
-			return;
-		}
-		tmpWord = tmpDict->words;
-		while (tmpWord) {
-			if (tryWord(Hinputs[H], tmpWord))
-				return backTrack(Vinputs, Vlen, Hinputs,  Hlen, words, ++H, V);
-			else
-				tmpWord = tmpWord->next;
-		}
-		if (!tmpWord && V != 0)
-			backTrack(Vinputs, Vlen, Hinputs,  Hlen, words, H, --V);
-		else {
-			printf("Problem has no solution on H\n");
-			return;
-		}
+		
+		if (V <= H && V < Vlen){
+			while (tmpDict && tmpDict->len != Vinputs[V]->len) 
+				tmpDict = tmpDict->next;
+			if (!tmpDict){
+				printf("Words with len %d doesn't exists\n", Vinputs[V]->len);
+				return;
+			}
+			tmpWord = tmpDict->words;
+			while (tmpWord) {
+				if (tryWord(Vinputs[V], tmpWord)){
+					printf("breaked ");
+					V++;
+					break;
+				} else
+					tmpWord = tmpWord->next;
+			}
+			printf("pointer = %p, len = %d\n", tmpWord, Vinputs[V]->len);
+			if (!tmpWord && H != 0)
+				H--;			
+			// else {
+			// 	printf("Problem has no solution on V\n");
+			// 	return;
+			// }
+			printf("On V = %d\n", V);
+		} else {
+			while (tmpDict && tmpDict->len != Hinputs[H]->len) 
+				tmpDict = tmpDict->next;
+			if (!tmpDict) {
+				printf("Words with len %d doesn't exists\n", Hinputs[H]->len);
+				return;
+			}
+			tmpWord = tmpDict->words;
+			while (tmpWord) {
+				if (tryWord(Hinputs[H], tmpWord)){
+					printf("breaked ");
+					H++;
+					break;
+				} else
+					tmpWord = tmpWord->next;
+			}
+			if (!tmpWord && V != 0)
+				V--;
+			// else {
+			// 	printf("Problem has no solution on H\n");
+			// 	return;
+			// }
+			printf("On H = %d\n", H);
 
+		}
 	}
 }
 
@@ -130,14 +139,12 @@ size_t tryWord(winput *Winput, word *word){
 		intrs = Winput->intrs[i];
 		if (*intrs->Hword && *intrs->Vword && 
 			(*intrs->Hword)[intrs->Hpos] != (*intrs->Vword)[intrs->Vpos]){
+		printf("%s\n", *Winput->intrs[i]->Hword);
 			Winput->word = NULL;
 			return 0;
 		}	
 	}
-	if (*intrs->Hword && *intrs->Vword){
-		printf("%s [%d] == %s [%d]", *intrs->Hword, intrs->Hpos, *intrs->Vword, intrs->Vpos);
-		printf(" | [%c] == [%c]\n", (*intrs->Hword)[intrs->Hpos], (*intrs->Vword)[intrs->Vpos]);
-	}
+
 	word->used = 1;
 	return 1;
 }

@@ -61,7 +61,6 @@ void readFile(dict  *words, sgrid *grid, char* fl){
             new_word->word = line;
             new_word->used = 0;
             new_word->next = NULL;
-            printf("%s %d\n", new_word->word, lnlen);
             tmp = words;
             while(tmp){
                 if (tmp->len == lnlen){

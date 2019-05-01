@@ -19,7 +19,7 @@ int main()
     Vinputs = verticalWordsInputs(grid, intrs, &Vlen);
 
 
-printGrid(grid);
+// printGrid(grid);
 
 backTrack(Vinputs, Vlen, Hinputs,  Hlen, words, 0, 0);
 // Solver(Vinputs, Vlen, Hinputs, Hlen, intrs, Ilen, words);
